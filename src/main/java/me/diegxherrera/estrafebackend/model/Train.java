@@ -3,6 +3,7 @@ package me.diegxherrera.estrafebackend.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,13 +16,47 @@ public class Train {
 
     private String name;
     private String service; // e.g., Regional, Intercity, Link Express
-    private Date nextStation; // e.g., Zurich HB, Lugano Süd, Blenio HB
-
-    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Seat> seats;
+    private String nextStation; // e.g., Zurich HB, Lugano Süd, Blenio HB
 
     @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Coach> coaches;
+    private List<Coach> coaches;
 
-    // Getters and Setters
+    // Getters & Setters
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setNextStation(String nextStation) {
+        this.nextStation = nextStation;
+    }
+
+    public String getNextStation() {
+        return nextStation;
+    }
+
+    // --
+
+    public Train(String service, String name) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.service = service;
+    }
+
+    public Train() {
+        this.id = UUID.randomUUID();
+    }
+
 }
