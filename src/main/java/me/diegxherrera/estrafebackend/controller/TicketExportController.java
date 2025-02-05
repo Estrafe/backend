@@ -1,48 +1,44 @@
 package me.diegxherrera.estrafebackend.controller;
 
-import me.diegxherrera.estrafebackend.util.TicketImageGenerator;
+import com.google.zxing.WriterException;
+import me.diegxherrera.estrafebackend.util.TicketPDFGenerator;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.util.UUID;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/tickets")
 public class TicketExportController {
 
-    @GetMapping(value = "/{ticketId}/export", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> exportTicket(@PathVariable("ticketId") UUID ticketId) {
+    @GetMapping(value = "/export", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> exportTicket() {
         try {
-            // Here, you can fetch the ticket details from the database using the UUID
-            // Example: Ticket ticket = ticketService.findById(ticketId);
+            // Hardcoded Ticket Details for Testing UI
+            String trainName = "AVE 02191";
+            String coach = "3";
+            String seatNumber = "1C";
+            String departureTime = "19:32";
+            String departureStation = "Lugano Süd";
+            String arrivalTime = "20:52";
+            String arrivalStation = "Zurich-Puerta de Andorra";
 
-            // For now, let's assume we have hardcoded data for demonstration
-            int coach = 4; // fetched from DB
-            String seatNumber = "12A"; // fetched from DB
-            String departureTime = "15:30"; // fetched from DB
-            String departureStation = "Madrid"; // fetched from DB
-            String arrivalStation = "Barcelona"; // fetched from DB
+            // Generate Ticket PDF
+            byte[] pdfBytes = TicketPDFGenerator.generateTicketPdf(
+                    trainName, "24234", coach, seatNumber, departureTime, departureStation, arrivalTime, arrivalStation, "22324"
+            );
 
-            // Generate the ticket image
-            BufferedImage ticketImage = TicketImageGenerator.generateTicketImage(
-                    coach, seatNumber, departureTime, departureStation, arrivalStation);
+            // Configure Response Headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "train_ticket.pdf");
 
-            // Convert the image to byte array
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(ticketImage, "png", baos);
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
 
-            // Return the image as response
-            return ResponseEntity
-                    .ok()
-                    .contentType(MediaType.IMAGE_PNG)
-                    .body(baos.toByteArray());
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

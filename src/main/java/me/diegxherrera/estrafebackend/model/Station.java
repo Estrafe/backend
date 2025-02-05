@@ -1,12 +1,21 @@
 package me.diegxherrera.estrafebackend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name = "station")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Station {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -20,50 +29,6 @@ public class Station {
 
     @ManyToMany(mappedBy = "stations", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Route> routes = new HashSet<>();
-
-    public Station() {
-    }
-
-    // Getters and Setters
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
-    }
-
-    public Set<Route> getRoutes() {
-        return routes;
-    }
-
-    public void setRoutes(Set<Route> routes) {
-        this.routes = routes;
-    }
-
-    public void addRoute(Route route) {
-        this.routes.add(route);
-    }
-
-    public void removeRoute(Route route) {
-        this.routes.remove(route);
-    }
 
     public Station(String name, City city) {
         this.name = name;
