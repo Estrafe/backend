@@ -21,13 +21,31 @@ public class StopSchedule {
     private UUID id;
 
     @Column(nullable = false)
-    private String stopName;          // e.g., Lugano HB, Latz HB
+    private String stopName;
 
-    private LocalTime scheduledArrival; // ETA at this stop
-    private LocalTime scheduledDeparture; // Departure time from this stop
-    private LocalTime actualArrival;  // Real-time ATA
-    private LocalTime actualDeparture; // Real-time departure time
+    private LocalTime scheduledArrival;
+    private LocalTime scheduledDeparture;
+    private LocalTime actualArrival;
+    private LocalTime actualDeparture;
 
     @ManyToOne
+    @JoinColumn(name = "train_schedule_id", nullable = false)
     private TrainSchedule trainSchedule;
+
+    // Minimal constructor
+    public StopSchedule(
+            String stopName,
+            LocalTime scheduledArrival,
+            LocalTime scheduledDeparture,
+            LocalTime actualArrival,
+            LocalTime actualDeparture,
+            TrainSchedule trainSchedule
+    ) {
+        this.stopName = stopName;
+        this.scheduledArrival = scheduledArrival;
+        this.scheduledDeparture = scheduledDeparture;
+        this.actualArrival = actualArrival;
+        this.actualDeparture = actualDeparture;
+        this.trainSchedule = trainSchedule;
+    }
 }

@@ -23,7 +23,6 @@ public class CityController {
         this.cityService = cityService;
     }
 
-    // Protect all endpoints with a specific role (e.g., "ROLE_ADMIN")
     @Secured("ROLE_ADMIN")
     @GetMapping
     public List<City> findAllCities() {
@@ -36,6 +35,7 @@ public class CityController {
         return cityService.findCityById(id);
     }
 
+    @Secured("ROLE_ADMIN")
     @PostMapping
     public City createCity(@RequestBody City city) {
         return cityService.createCity(city);

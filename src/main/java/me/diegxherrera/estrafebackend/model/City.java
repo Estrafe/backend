@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -28,10 +27,7 @@ public class City {
 
     public void addStation(Station station) {
         this.stations.add(station);
-    }
-
-    public void removeStation(Station station) {
-        this.stations.remove(station);
+        station.setCity(this);  // Ensure bidirectional consistency
     }
 
     public City(String name) {

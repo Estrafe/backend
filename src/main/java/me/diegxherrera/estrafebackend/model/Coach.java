@@ -30,9 +30,13 @@ public class Coach {
     @OneToMany(mappedBy = "coach", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Seat> seats; // List of seats in the coach
 
-    // ✅ Constructor with parameters
-    public Coach(Train train, int coachNumber) {
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CoachType coachType; // Type of the coach
+
+    public Coach(Train train, int coachNumber, CoachType coachType) {
         this.train = train;
         this.coachNumber = coachNumber;
+        this.coachType = coachType;
     }
 }

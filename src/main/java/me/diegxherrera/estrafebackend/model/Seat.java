@@ -21,28 +21,26 @@ public class Seat {
 
     private String seatNumber; // Unique seat identifier within the coach
     private String classType;  // e.g., Economy, Comfort, Business
-    private boolean isBooked = false; // Indicates if the seat is booked
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "booked", nullable = false)
+    private boolean booked = false;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "coach_id", nullable = false)
     private Coach coach;
 
+    public Seat(String s, String economy, Coach coach) {
+        this.seatNumber = s;
+        this.classType = economy;
+        this.coach = coach;
+        this.booked = false;
+    }
+
     public void bookSeat() {
-        this.isBooked = true;
+        this.booked = true;
     }
 
     public void unbookSeat() {
-        this.isBooked = false;
-    }
-
-    @Override
-    public String toString() {
-        return "Seat{" +
-                "id=" + id +
-                ", seatNumber='" + seatNumber + '\'' +
-                ", classType='" + classType + '\'' +
-                ", isBooked=" + isBooked +
-                ", coach=" + (coach != null ? coach.getCoachNumber() : "null") +
-                '}';
+        this.booked = false;
     }
 }

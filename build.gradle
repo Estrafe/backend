@@ -21,11 +21,16 @@ dependencies {
 	// Actual App
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // Input validation
 	implementation 'org.springframework.boot:spring-boot-starter-mail' // Email service
 	implementation 'org.springframework.security:spring-security-crypto' // For password hashing (BCrypt)
 	implementation 'org.projectlombok:lombok:1.18.30'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5' // Use Jackson for JWT JSON parsing
+
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 	implementation 'com.itextpdf:itext7-core:8.0.3'
 	implementation 'com.google.zxing:core:3.5.2'

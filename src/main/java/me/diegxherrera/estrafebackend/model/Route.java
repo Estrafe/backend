@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -23,19 +22,18 @@ public class Route {
 
     private String name;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "route_station",
+    // Owning side: define the join table
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "route_station",
             joinColumns = @JoinColumn(name = "route_id"),
-            inverseJoinColumns = @JoinColumn(name = "station_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "station_id"))
     private Set<Station> stations = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "origin_station_id", nullable = false) // Foreign key to Station
+    @JoinColumn(name = "origin_station_id", nullable = false)
     private Station originStation;
 
     @ManyToOne
-    @JoinColumn(name = "destination_station_id", nullable = false) // Foreign key to Station
+    @JoinColumn(name = "destination_station_id", nullable = false)
     private Station destinationStation;
 }
