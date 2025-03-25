@@ -1,4 +1,4 @@
-package me.diegxherrera.estrafebackend.controller;
+package me.diegxherrera.estrafebackend.controller.v1;
 
 import me.diegxherrera.estrafebackend.model.TrainSchedule;
 import me.diegxherrera.estrafebackend.service.TrainScheduleService;

@@ -1,10 +1,10 @@
 package me.diegxherrera.estrafebackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -15,6 +15,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,11 +23,12 @@ public class Route {
 
     private String name;
 
-    // Owning side: define the join table
+    // For ManyToMany with Station we can ignore one side to prevent loops.
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "route_station",
             joinColumns = @JoinColumn(name = "route_id"),
             inverseJoinColumns = @JoinColumn(name = "station_id"))
+    @JsonIgnoreProperties("routes")
     private Set<Station> stations = new HashSet<>();
 
     @ManyToOne

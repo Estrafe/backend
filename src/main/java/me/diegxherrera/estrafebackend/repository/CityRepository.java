@@ -4,9 +4,10 @@ import me.diegxherrera.estrafebackend.model.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface CityRepository extends JpaRepository<City, UUID> {
-    // Custom query methods (if needed)
+    Optional<City> findByName(String name);
 }

@@ -1,13 +1,11 @@
 package me.diegxherrera.estrafebackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalTime;
-import java.util.List;
+import lombok.*;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -16,6 +14,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TrainSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -24,10 +24,18 @@ public class TrainSchedule {
     @OneToOne(fetch = FetchType.LAZY)
     private Train train;
 
-    private LocalTime departureTime;
-    private LocalTime arrivalTime;
+    @Column(nullable = false)
+    private LocalDateTime departureTime;
+
+    @Column(nullable = false)
+    private LocalDateTime arrivalTime;
+
     private String serviceDays;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Route route;
+
+    // NEW FIELD: base price for the schedule
+    @Column(nullable = false, columnDefinition = "DOUBLE DEFAULT 0")
+    private double basePrice;
 }

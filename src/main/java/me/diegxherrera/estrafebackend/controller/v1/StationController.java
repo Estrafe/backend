@@ -1,8 +1,9 @@
-package me.diegxherrera.estrafebackend.controller;
+package me.diegxherrera.estrafebackend.controller.v1;
 
 import me.diegxherrera.estrafebackend.model.Station;
 import me.diegxherrera.estrafebackend.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -22,22 +23,22 @@ public class StationController {
         this.stationService = stationService;
     }
 
-    // Public: Get all stations (for users searching for stations)
+    // ✅ Public: Get all stations
     @GetMapping
     public ResponseEntity<List<Station>> getAllStations() {
         List<Station> stations = stationService.findAllStations();
         return ResponseEntity.ok(stations);
     }
 
-    // Public: Get a specific station by ID
+    // ✅ Public: Get a station by ID
     @GetMapping("/{id}")
     public ResponseEntity<Station> getStationById(@PathVariable UUID id) {
         return stationService.findStationById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build()); // Return 404 if not found
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // Admin-Only: Create a new station
+    // ✅ Admin-Only: Create a new station
     @Secured("ROLE_ADMIN")
     @PostMapping
     public ResponseEntity<Station> createStation(@RequestBody Station station) {
@@ -45,7 +46,7 @@ public class StationController {
         return ResponseEntity.ok(createdStation);
     }
 
-    // Admin-Only: Update an existing station (full update)
+    // ✅ Admin-Only: Update a station
     @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
     public ResponseEntity<Station> updateStation(@PathVariable UUID id, @RequestBody Station updatedStation) {
@@ -56,11 +57,10 @@ public class StationController {
                     Station savedStation = stationService.createStation(existingStation);
                     return ResponseEntity.ok(savedStation);
                 })
-                .orElse(ResponseEntity.notFound().build()); // Return 404 if not found
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // Admin-Only: Partially update a station
-    @Secured("ROLE_ADMIN")
+    // ✅ Admin-Only: Partially update a station
     @PatchMapping("/{id}")
     public ResponseEntity<Station> patchStation(@PathVariable UUID id, @RequestBody Station partialUpdate) {
         return stationService.findStationById(id)
@@ -77,14 +77,15 @@ public class StationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Admin-Only: Delete a station
-    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteStation(@PathVariable UUID id) {
-        if (stationService.findStationById(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
+        try {
+            stationService.deleteStation(id);
+            return ResponseEntity.ok().body(Map.of("message", "Station deleted successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to delete station"));
         }
-        stationService.deleteStation(id);
-        return ResponseEntity.ok().body(Map.of("message", "Station deleted successfully"));
     }
 }

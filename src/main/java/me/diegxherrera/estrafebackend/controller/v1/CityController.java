@@ -1,10 +1,9 @@
-package me.diegxherrera.estrafebackend.controller;
+package me.diegxherrera.estrafebackend.controller.v1;
 
 import me.diegxherrera.estrafebackend.model.City;
-import me.diegxherrera.estrafebackend.model.Station;
 import me.diegxherrera.estrafebackend.service.CityService;
-import me.diegxherrera.estrafebackend.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/city")
 public class CityController {
@@ -23,7 +23,6 @@ public class CityController {
         this.cityService = cityService;
     }
 
-    @Secured("ROLE_ADMIN")
     @GetMapping
     public List<City> findAllCities() {
         return cityService.findAllCities();
@@ -41,9 +40,21 @@ public class CityController {
         return cityService.createCity(city);
     }
 
-    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     public void deleteCity(@PathVariable UUID id) {
         cityService.deleteCity(id);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<City> patchCity(@PathVariable UUID id, @RequestBody City partialUpdate) {
+        return cityService.findCityById(id)
+                .map(existingCity -> {
+                    if (partialUpdate.getName() != null) {
+                        existingCity.setName(partialUpdate.getName());
+                    }
+                    City updatedCity = cityService.createCity(existingCity);
+                    return ResponseEntity.ok(updatedCity);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }

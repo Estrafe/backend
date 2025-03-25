@@ -1,10 +1,9 @@
 package me.diegxherrera.estrafebackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -15,11 +14,13 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -27,7 +28,7 @@ public class City {
 
     public void addStation(Station station) {
         this.stations.add(station);
-        station.setCity(this);  // Ensure bidirectional consistency
+        station.setCity(this);
     }
 
     public City(String name) {

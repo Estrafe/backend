@@ -1,4 +1,4 @@
-package me.diegxherrera.estrafebackend.controller;
+package me.diegxherrera.estrafebackend.controller.v1;
 
 import me.diegxherrera.estrafebackend.model.StopSchedule;
 import me.diegxherrera.estrafebackend.service.StopScheduleService;

@@ -28,6 +28,14 @@ public class CityService {
     }
 
     public City createCity(City city) {
+        if (city.getId() == null) {
+            throw new IllegalArgumentException("City id is null.");
+        }
+
+        if (city.getName() == null) {
+            throw new IllegalArgumentException("City name is null.");
+        }
+
         return cityRepository.save(city);
     }
 

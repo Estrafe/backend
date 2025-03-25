@@ -5,6 +5,8 @@ import me.diegxherrera.estrafebackend.repository.TrainScheduleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,5 +71,17 @@ public class TrainScheduleService {
             return true;
         }
         return false;
+    }
+
+    public List<TrainSchedule> findSchedules(UUID originStationId, UUID destinationStationId, LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();          // e.g., 2025-03-05T00:00
+        LocalDateTime endOfDay = startOfDay.plusDays(1);           // e.g., 2025-03-06T00:00
+        return trainScheduleRepository
+                .findByRoute_OriginStation_IdAndRoute_DestinationStation_IdAndDepartureTimeBetween(
+                        originStationId,
+                        destinationStationId,
+                        startOfDay,
+                        endOfDay
+                );
     }
 }

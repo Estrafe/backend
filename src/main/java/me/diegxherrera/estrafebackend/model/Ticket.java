@@ -18,6 +18,10 @@ public class Ticket {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_id", nullable = false)
+    private TrainSchedule schedule;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seat_id", nullable = false)
     private Seat seat;
 
@@ -29,6 +33,14 @@ public class Ticket {
     @JoinColumn(name = "train_id", nullable = false)
     private Train train;
 
-    @Column(nullable = true) // ✅ Allow username to be null, or set a default value
+    @Column(nullable = true) // ✅ Can be null for unassigned tickets
     private String username;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TicketStatus status = TicketStatus.BOOKED;
+
+    public enum TicketStatus {
+        AVAILABLE, BOOKED, CANCELLED
+    }
 }

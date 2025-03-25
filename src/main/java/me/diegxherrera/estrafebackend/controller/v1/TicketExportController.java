@@ -1,6 +1,5 @@
-package me.diegxherrera.estrafebackend.controller;
+package me.diegxherrera.estrafebackend.controller.v1;
 
-import com.google.zxing.WriterException;
 import me.diegxherrera.estrafebackend.util.TicketPDFGenerator;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/tickets")
+@RequestMapping("/api/tickets/export")
 public class TicketExportController {
 
     @GetMapping(value = "/export", produces = MediaType.APPLICATION_PDF_VALUE)

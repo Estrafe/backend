@@ -2,6 +2,8 @@ package me.diegxherrera.estrafebackend.repository;
 
 import me.diegxherrera.estrafebackend.model.Coach;
 import me.diegxherrera.estrafebackend.model.Seat;
+import me.diegxherrera.estrafebackend.model.Train;
+import me.diegxherrera.estrafebackend.model.TrainSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,6 +13,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface SeatRepository extends JpaRepository<Seat, UUID> {
+
+    // ✅ Get all seats in a specific train
+    @Query("SELECT s FROM Seat s WHERE s.coach.train = :train")
+    List<Seat> findByTrain(@Param("train") Train train);
 
     // ✅ Get all available (unbooked) seats in a coach
     List<Seat> findByCoachAndBookedFalse(Coach coach);
@@ -28,4 +34,7 @@ public interface SeatRepository extends JpaRepository<Seat, UUID> {
     // ✅ Count available seats in a coach (for frontend display)
     @Query("SELECT COUNT(s) FROM Seat s WHERE s.coach = :coach AND s.booked = false")
     int countAvailableSeats(@Param("coach") Coach coach);
+
+    // ✅ Find a seat by ID (ensures we validate before booking)
+    Optional<Seat> findById(UUID id);
 }

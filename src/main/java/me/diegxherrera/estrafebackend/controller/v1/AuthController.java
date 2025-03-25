@@ -1,9 +1,10 @@
-package me.diegxherrera.estrafebackend.controller;
+package me.diegxherrera.estrafebackend.controller.v1;
 
 import me.diegxherrera.estrafebackend.model.UserEntity;
 import me.diegxherrera.estrafebackend.repository.UserRepository;
 import me.diegxherrera.estrafebackend.security.JwtService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -100,7 +101,7 @@ public class AuthController {
     public ResponseEntity<?> getUserProfile(Principal principal) {
         Optional<UserEntity> userOptional = userRepository.findByUsername(principal.getName());
 
-        if (userOptional.isEmpty()) {
+        if (userOptional.isEmpty() ) {
             return ResponseEntity.status(404).body(Map.of("error", "User not found"));
         }
 
@@ -150,6 +151,7 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
     }
 
+    @Secured("ROLE_ADMIN")
     @GetMapping("/users")
     public ResponseEntity<List<Map<String, Serializable>>> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();

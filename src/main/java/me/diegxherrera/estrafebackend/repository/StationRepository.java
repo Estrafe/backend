@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -17,4 +18,7 @@ public interface StationRepository extends JpaRepository<Station, UUID> {
     @Query("SELECT s FROM Station s ORDER BY s.name ASC")
     List<Station> findAllOrderedByName();
 
+    Optional<Station> findByName(String name);
+
+    Optional<Station> findByNameAndCity(String stationName, City city);
 }
